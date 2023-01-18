@@ -75,6 +75,19 @@ public class WorldChunkMetaManager {
 		return existing;
 	}
 
+	/**
+	 * Saves all entries to the database
+	 */
+	void flushAll() {
+		synchronized (metas) {
+			for (ChunkCoord coord : metas.keySet()) {
+				synchronized (coord) {
+					coord.fullyPersist();
+				}
+			}
+		}
+	}
+
 	void flushPluginData(short pluginID) {
 		synchronized (metas) {
 			for (ChunkCoord coord : metas.values()) {

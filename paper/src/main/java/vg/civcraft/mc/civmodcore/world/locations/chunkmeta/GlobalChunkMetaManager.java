@@ -60,7 +60,16 @@ public class GlobalChunkMetaManager {
 			Supplier<ChunkMeta<?>> computer, boolean alwaysLoaded) {
 		return getWorldManager(world).computeIfAbsent(pluginID, chunkX, chunkZ, computer, alwaysLoaded);
 	}
-	
+
+
+
+	public void flushAll() {
+		for (WorldChunkMetaManager man : worldToManager.values()) {
+			man.flushAll();
+		}
+	}
+
+
 	/**
 	 * Saves all data for one specific plugin out to the database
 	 * @param pluginID Internal id of the plugin to save data for
@@ -125,6 +134,7 @@ public class GlobalChunkMetaManager {
 	void loadChunkData(Chunk chunk) {
 		WorldChunkMetaManager worldManager = worldToManager.get(chunk.getWorld().getUID());
 		if (worldManager == null) {
+
 			throw new IllegalStateException("No world manager for chunk at " + chunk.toString());
 		}
 		worldManager.loadChunk(chunk.getX(), chunk.getZ());
